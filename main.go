@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws/session"
 )
@@ -11,6 +12,7 @@ type kmsDecrypter struct {
 	session *session.Session
 	region  *string
 	marker  *string
+	output  *string
 }
 
 func main() {
@@ -24,9 +26,9 @@ func main() {
 		ret, err := d.genFromMarked()
 		// If we get any errors, print the error and exit with code 1.
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			os.Exit(1)
 		}
-
 		fmt.Printf(ret)
 	}
 }

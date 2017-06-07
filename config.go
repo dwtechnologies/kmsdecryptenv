@@ -13,6 +13,8 @@ const (
 	markerEnv = "KMS_MARKER"
 	defMarker = "KMS_DECRYPT"
 	regionEnv = "KMS_AWS_REGION"
+	outputVal = "KMS_OUTPUT"
+	defOutput = "{KEY} {VAL}{LF}"
 )
 
 func config() *kmsDecrypter {
@@ -34,6 +36,12 @@ func config() *kmsDecrypter {
 		a = true
 	}
 
+	// Get Output format
+	o := os.Getenv(outputVal)
+	if o == "" {
+		o = defOutput
+	}
+
 	// Use the default credential provider, it will check in the following order (1. ENV VARS, 2. CONFIG FILE, 3. EC2 ROLE).
 	// In most cases we will use the EC2 role for providing access to the KMS key.
 	// c := credentials.NewCredentials(nil)
@@ -47,5 +55,6 @@ func config() *kmsDecrypter {
 		region:  &r,
 		marker:  &m,
 		auto:    &a,
+		output:  &o,
 	}
 }

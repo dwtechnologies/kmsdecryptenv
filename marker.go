@@ -50,7 +50,8 @@ func (d *kmsDecrypter) genFromMarked() (string, error) {
 			return ret, err
 		}
 
-		ret = fmt.Sprintf("%v%v=%v\n", ret, newkey, *unecrypted)
+		format := strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(*d.output, "{KEY}", newkey, -1), "{VAL}", *unecrypted, -1), "{CRLF}", "\r\n", -1), "{LF}", "\n", -1), "{TAB}", "\t", -1)
+		ret = ret + format
 	}
 
 	return ret, nil

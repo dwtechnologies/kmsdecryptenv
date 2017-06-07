@@ -15,11 +15,11 @@ since KMS errors will be treated as "This string is not KMS encrypted".
 ## Marker mode
 
 With marker mode we will decrypt all variables that are called anything with a specified marker.
-The default marker is `"KMS_ENCRYPTED"`, but this can be changed by setting the `"KMS_MARKER"` ENV variable.
+The default marker is `"KMS_DECRYPT"`, but this can be changed by setting the `"KMS_MARKER"` ENV variable.
 
 It will then decrypt the value of the ENV and set it to a new ENV variable with the same name but with the marker removed.
 
-So for example `TEST_KMS_ENCRYPTED` would become `TEST`. `VAR_KMS_ENCRYPTED_1` would become `VAR1` and so forth.
+So for example `TEST_KMS_DECRYPT` would become `TEST`. `VAR_KMS_DECRYPT_1` would become `VAR1` and so forth.
 
 ## Authing against AWS
 
@@ -33,9 +33,17 @@ The program will auth against AWS in the following manner
 
 The program uses the following ENV vars for configuration
 
-    KMS_REGION = Region to use for the KMS service
+    KMS_AWS_REGION = Region to use for the KMS service
     KMS_MARKER = Marker to use for finding vars to decrypt
     KMS_AUTO = Set to true if auto mode should be enabled (KMS_MARKER is ignored if this is set to true)
+    KMS_OUTPUT = Define the output. Supports the following vars:
+        {KEY} = The key
+        {VAL} = Unencrypted Value
+        {LF} = UNIX newline (LF)
+        {CRLF} = Windows newline (CRLF)
+        {TAB} = Tab
+
+        So to mimic the default output you would set KMS_OUTPUT to "{KEY} {VAL}{LF}".
 
 ## Install
 
@@ -44,7 +52,12 @@ The binaries are self contained and have no dependencies.
 
 ## Bulding
 
+Please clone this to $GOPATH/src/github.com/dwtechnologies folder. Either using `git` or by using `go get -u github.com/dwtechnologies/kmsdecryptenv`.
+
+If you don't have a go env installed, please visit golang.org for info on how to set it up or just grab one of the binary files above.
+
 ```bash
+cd $GOPATH/src/github.com/dwtechnologies.com/kmsdecryptenv
 go get
 go build
 ```
@@ -54,3 +67,5 @@ go build
 Please see example.sh for a linux/unix working example.
 
 Note that the program doesn't actually set any vars but will output it as `KEY=VALUE` pairs seperated with `\n` (newline).
+
+So using bash you could easily set your ENV by running `export $(./kmsdecryptenv)`
