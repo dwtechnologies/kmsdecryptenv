@@ -50,6 +50,9 @@ The program uses the following ENV vars for configuration
 Either download any of the binaries provided in the list below or build yourself.
 The binaries are self contained and have no dependencies.
 
+You will find them here:
+[github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0](https://github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0)
+
 ## Bulding
 
 Please clone this to $GOPATH/src/github.com/dwtechnologies folder. Either using `git` or by using `go get -u github.com/dwtechnologies/kmsdecryptenv`.
