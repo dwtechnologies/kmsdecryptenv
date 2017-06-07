@@ -69,3 +69,12 @@ Please see example.sh for a linux/unix working example.
 Note that the program doesn't actually set any vars but will output it as `KEY=VALUE` pairs seperated with `\n` (newline).
 
 So using bash you could easily set your ENV by running `export $(./kmsdecryptenv)`
+
+## Performance
+
+The program has an very small memory and CPU footprint. For example running the program outside AWS (from our Stockholm office to eu-west-1) and trying to decode 30 KMS encrypted strings generates the following
+
+```bash
+time ./example.sh
+        0.44 real         0.16 user         0.03 sys
+```
