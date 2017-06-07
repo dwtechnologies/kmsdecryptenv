@@ -9,6 +9,10 @@ import (
 // it the encryption fails it will not return error but will assume that the string was not encrypted by KMS and continue with the next itteration in the loop.
 // Returns error.
 func (d *kmsDecrypter) genAuto() string {
+	// Create a result channel and count var
+	result := make(chan result)
+	count := 0
+
 	envs := os.Environ()
 	ret := ""
 
@@ -27,14 +31,23 @@ func (d *kmsDecrypter) genAuto() string {
 			continue
 		}
 
+		count++
+		// Send the key and value + result channel to the decrypt function in a separate go-routine.
+		go d.decrypt(&key, &value, result)
+	}
+
+	// Loop through and wait for all go-routines to finish their decryption phase.
+	for i := 0; i < count; i++ {
+		res := <-result
+
 		// Here is where auto gets dangerous. If decryption fails we will assume that it's a none KMS encrypted value!
-		unecrypted, err := d.kmsDecrypt(&value)
-		if err != nil {
+		if res.err != nil {
 			continue
 		}
 
-		format := strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(*d.output, "{KEY}", key, -1), "{VAL}", *unecrypted, -1), "{CRLF}", "\r\n", -1), "{LF}", "\n", -1), "{TAB}", "\t", -1)
+		format := strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(*d.output, "{KEY}", res.key, -1), "{VAL}", res.val, -1), "{CRLF}", "\r\n", -1), "{LF}", "\n", -1), "{TAB}", "\t", -1)
 		ret = ret + format
+
 	}
 
 	return ret

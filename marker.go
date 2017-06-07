@@ -9,6 +9,10 @@ import (
 // genFromMarked will decrypt all envs that contain has the specified marker in it's name.
 // Returns error.
 func (d *kmsDecrypter) genFromMarked() (string, error) {
+	// Create a result channel and count var
+	result := make(chan result)
+	count := 0
+
 	envs := os.Environ()
 	ret := ""
 
@@ -27,6 +31,7 @@ func (d *kmsDecrypter) genFromMarked() (string, error) {
 			continue
 		}
 
+		count++
 		surrounding := fmt.Sprintf("_%v_", *d.marker)
 		leading := fmt.Sprintf("_%v", *d.marker)
 		trailing := fmt.Sprintf("%v_", *d.marker)
@@ -45,13 +50,22 @@ func (d *kmsDecrypter) genFromMarked() (string, error) {
 			newkey = strings.Replace(key, *d.marker, "", 1)
 		}
 
-		unecrypted, err := d.kmsDecrypt(&value)
-		if err != nil {
-			return ret, err
+		// Send the key and value + result channel to the decrypt function in a separate go-routine.
+		go d.decrypt(&newkey, &value, result)
+
+	}
+
+	// Loop through and wait for all go-routines to finish their decryption phase.
+	for i := 0; i < count; i++ {
+		res := <-result
+
+		if res.err != nil {
+			return ret, res.err
 		}
 
-		format := strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(*d.output, "{KEY}", newkey, -1), "{VAL}", *unecrypted, -1), "{CRLF}", "\r\n", -1), "{LF}", "\n", -1), "{TAB}", "\t", -1)
+		format := strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(*d.output, "{KEY}", res.key, -1), "{VAL}", res.val, -1), "{CRLF}", "\r\n", -1), "{LF}", "\n", -1), "{TAB}", "\t", -1)
 		ret = ret + format
+
 	}
 
 	return ret, nil
