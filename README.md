@@ -62,6 +62,8 @@ go get
 go build
 ```
 
+You can also use the supplied Makefile for building and cross-compiling. You will need to have run `go get` beforehand, becasue the Makefile will not do this step.
+
 ## Usage
 
 Please see example.sh for a linux/unix working example.
