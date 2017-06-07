@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 const (
 	autoEnv   = "KMS_AUTO_DECRYPT"
 	markerEnv = "KMS_MARKER"
+	defMarker = "KMS_DECRYPT"
 	regionEnv = "KMS_AWS_REGION"
 )
 
@@ -25,7 +25,7 @@ func config() *kmsDecrypter {
 	// Get KMS Marker
 	m := os.Getenv(markerEnv)
 	if m == "" {
-		m = "KMS_MARKER"
+		m = defMarker
 	}
 
 	// Get AUTO value
@@ -36,10 +36,10 @@ func config() *kmsDecrypter {
 
 	// Use the default credential provider, it will check in the following order (1. ENV VARS, 2. CONFIG FILE, 3. EC2 ROLE).
 	// In most cases we will use the EC2 role for providing access to the KMS key.
-	c := credentials.NewCredentials(nil)
+	// c := credentials.NewCredentials(nil)
 	cfg := &aws.Config{
-		Credentials: c,
-		Region:      &r,
+		// Credentials: c,
+		Region: &r,
 	}
 
 	return &kmsDecrypter{

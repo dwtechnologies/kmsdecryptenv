@@ -19,6 +19,7 @@ func (d *kmsDecrypter) kmsDecrypt(str *string) (*string, error) {
 
 	// Decrypt using KMS.
 	params := &kms.DecryptInput{CiphertextBlob: decode}
+
 	resp, err := svc.Decrypt(params)
 	if err != nil {
 		return nil, err

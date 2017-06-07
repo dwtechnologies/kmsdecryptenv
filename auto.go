@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
@@ -8,8 +9,9 @@ import (
 // genAuto will assume that every string that is divisible with 4 is a base64 encoded string and will try to decrypt it.
 // it the encryption fails it will not return error but will assume that the string was not encrypted by KMS and continue with the next itteration in the loop.
 // Returns error.
-func (d *kmsDecrypter) genAuto() error {
+func (d *kmsDecrypter) genAuto() string {
 	envs := os.Environ()
+	ret := ""
 
 	// Range over the envs.
 	for _, env := range envs {
@@ -32,12 +34,8 @@ func (d *kmsDecrypter) genAuto() error {
 			continue
 		}
 
-		// Set the new, unecrypted value.
-		err = os.Setenv(key, *unecrypted)
-		if err != nil {
-			return err
-		}
+		ret = fmt.Sprintf("%v%v=%v\n", ret, key, *unecrypted)
 	}
 
-	return nil
+	return ret
 }

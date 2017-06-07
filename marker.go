@@ -7,10 +7,10 @@ import (
 )
 
 // genFromMarked will decrypt all envs that contain has the specified marker in it's name.
-// It will create a new env var without the marker in it's name and set the original env to empty (for security purposes).
 // Returns error.
-func (d *kmsDecrypter) genFromMarked() error {
+func (d *kmsDecrypter) genFromMarked() (string, error) {
 	envs := os.Environ()
+	ret := ""
 
 	for _, env := range envs {
 		slice := strings.SplitN(env, "=", 2)
@@ -47,21 +47,11 @@ func (d *kmsDecrypter) genFromMarked() error {
 
 		unecrypted, err := d.kmsDecrypt(&value)
 		if err != nil {
-			return err
+			return ret, err
 		}
 
-		// Set the new, unecrypted value.
-		err = os.Setenv(newkey, *unecrypted)
-		if err != nil {
-			return err
-		}
-
-		// Remove the encrypted key for security purposes.
-		err = os.Setenv(key, "")
-		if err != nil {
-			return err
-		}
+		ret = fmt.Sprintf("%v%v=%v\n", ret, newkey, *unecrypted)
 	}
 
-	return nil
+	return ret, nil
 }
