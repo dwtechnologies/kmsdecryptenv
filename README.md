@@ -51,7 +51,7 @@ Either download any of the binaries provided in the list below or build yourself
 The binaries are self contained and have no dependencies.
 
 You will find them here:
-[github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0](https://github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0)
+[github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.1.0](https://github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0)
 
 ## Bulding
 
