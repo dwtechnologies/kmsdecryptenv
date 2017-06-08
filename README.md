@@ -43,7 +43,7 @@ The program uses the following ENV vars for configuration
         {CRLF} = Windows newline (CRLF)
         {TAB} = Tab
 
-        So to mimic the default output you would set KMS_OUTPUT to "{KEY} {VAL}{LF}".
+        So to mimic the default output you would set KMS_OUTPUT to "{KEY}={VAL}{LF}".
 
 ## Install
 
