@@ -1,5 +1,7 @@
 # kmsdecryptenv
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/dwtechnologies/kmsdecryptenv)](https://goreportcard.com/report/github.com/dwtechnologies/kmsdecryptenv)
+
 This program will decrypt ENV variables encrypted with AWS automatically.
 
 It has two modes `auto` and `marker`.
