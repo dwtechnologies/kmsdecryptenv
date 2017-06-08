@@ -13,7 +13,7 @@ const (
 	defMarker = "KMS_DECRYPT"
 	regionEnv = "KMS_AWS_REGION"
 	outputVal = "KMS_OUTPUT"
-	defOutput = "{KEY} {VAL}{LF}"
+	defOutput = "{KEY}={VAL}{LF}"
 )
 
 type decrypter struct {
