@@ -3,32 +3,37 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"github.com/aws/aws-sdk-go/aws/session"
+	"strings"
 )
 
-type kmsDecrypter struct {
-	auto    *bool
-	session *session.Session
-	region  *string
-	marker  *string
-	output  *string
-}
-
 func main() {
-	d := config()
+	d, err := config()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
+	result := map[string]string{}
 	// Determine if we should automatically decrypt all envs or just those with our specified marker.
 	switch {
 	case *d.auto:
-		fmt.Printf(d.genAuto())
+		result = d.decrypter.DecryptEnvAuto()
 	default:
-		ret, err := d.genFromMarked()
+		result, err = d.decrypter.DecryptEnv(*d.marker)
 		// If we get any errors, print the error and exit with code 1.
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		fmt.Printf(ret)
 	}
+
+	// Create the output according to our output format.
+	ret := ""
+	for key, val := range result {
+		format := strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(*d.output, "{KEY}", key, -1), "{VAL}", val, -1), "{CRLF}", "\r\n", -1), "{LF}", "\n", -1), "{TAB}", "\t", -1)
+		ret = ret + format
+	}
+
+	// Print the result
+	fmt.Printf(ret)
 }

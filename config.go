@@ -4,8 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/dwtechnologies/kmsdecrypt"
 )
 
 const (
@@ -17,11 +16,23 @@ const (
 	defOutput = "{KEY} {VAL}{LF}"
 )
 
-func config() *kmsDecrypter {
-	// Fetch AWS_REGION from ENV
+type decrypter struct {
+	decrypter *kmsdecrypt.KmsDecrypter
+	auto      *bool
+	marker    *string
+	output    *string
+}
+
+func config() (*decrypter, error) {
+	// Get AWS Region and create kmsdecrypt
 	r := os.Getenv(regionEnv)
 	if r == "" {
 		r = "eu-west-1" // Default to eu-west-1 if no region is specified.
+	}
+
+	decrypt, err := kmsdecrypt.New(r)
+	if err != nil {
+		return nil, err
 	}
 
 	// Get KMS Marker
@@ -42,19 +53,10 @@ func config() *kmsDecrypter {
 		o = defOutput
 	}
 
-	// Use the default credential provider, it will check in the following order (1. ENV VARS, 2. CONFIG FILE, 3. EC2 ROLE).
-	// In most cases we will use the EC2 role for providing access to the KMS key.
-	// c := credentials.NewCredentials(nil)
-	cfg := &aws.Config{
-		// Credentials: c,
-		Region: &r,
-	}
-
-	return &kmsDecrypter{
-		session: session.Must(session.NewSession(cfg)),
-		region:  &r,
-		marker:  &m,
-		auto:    &a,
-		output:  &o,
-	}
+	return &decrypter{
+		decrypter: decrypt,
+		auto:      &a,
+		marker:    &m,
+		output:    &o,
+	}, nil
 }
