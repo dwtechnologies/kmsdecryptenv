@@ -70,7 +70,7 @@ There is also deb packages for debian/ubuntu.
 
 ### Mac binaries
 
-[Linux amd64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/darwin_amd64.tar.gz)
+[Mac OS X amd64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/darwin_amd64.tar.gz)
 
 ### Windows binaries
 
