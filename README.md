@@ -52,7 +52,33 @@ The program uses the following ENV vars for configuration
 Either download any of the binaries provided in the list below or build yourself.
 The binaries are self contained and have no dependencies.
 
-You will find them here:
+There is also deb packages for debian/ubuntu.
+
+### Debian deb pkgs
+
+[Debian/Ubuntu amd64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/kmsdecryptenv_1.0.0-1-amd64.deb)  
+[Debian/Ubuntu 386](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/kmsdecryptenv_1.0.0-1-386.deb)  
+[Debian/Ubuntu arm](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/kmsdecryptenv_1.0.0-1-arm.deb)  
+[Debian/Ubuntu arm64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/kmsdecryptenv_1.0.0-1-arm64.deb)
+
+### Linux binaries
+
+[Linux amd64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/linux_amd64.tar.gz)  
+[Linux 386](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/linux_386.tar.gz)  
+[Linux arm](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/linux_arm.tar.gz)  
+[Linux arm64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/linux_arm64.tar.gz)
+
+### Mac binaries
+
+[Linux amd64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/darwin_amd64.tar.gz)
+
+### Windows binaries
+
+[Windows amd64](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/windows_amd64.zip)  
+[Windows 386](https://github.com/dwtechnologies/kmsdecryptenv/releases/download/1.0.0/windows_386.zip)
+
+
+You will find the whole first release here:
 [github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0](https://github.com/dwtechnologies/kmsdecryptenv/releases/tag/1.0.0)
 
 ## Bulding
@@ -68,6 +94,7 @@ go build
 ```
 
 You can also use the supplied Makefile for building and cross-compiling. You will need to have run `go get` beforehand, becasue the Makefile will not do this step.
+Please note that docker is required for the Makefile to work propperly, it will use ubuntu:16.04 image to build the deb packages.
 
 ## Usage
 

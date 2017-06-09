@@ -1,10 +1,13 @@
 appname := kmsdecryptenv
+version := 1.0.0
+debversion := $(version)-1
 
 sources := $(wildcard *.go)
 
-build = GOOS=$(1) GOARCH=$(2) go build -o build/$(appname)$(3)
-tar = cd build && tar -cvzf $(1)_$(2).tar.gz $(appname)$(3) && rm $(appname)$(3)
-zip = cd build && zip $(1)_$(2).zip $(appname)$(3) && rm $(appname)$(3)
+build = GOOS=$(1) GOARCH=$(2) go build -o build/$(appname)
+deb = ./create_deb_pkg.sh $(appname) $(2) $(debversion)
+tar = cd build && tar -cvzf $(1)_$(2).tar.gz $(appname) && rm $(appname)
+zip = cd build && zip $(1)_$(2).zip $(appname) && rm $(appname)
 
 .PHONY: all windows darwin linux clean
 
@@ -13,39 +16,43 @@ all: windows darwin linux
 clean:
 	rm -rf build/
 
-##### LINUX BUILDS #####
-linux: build/linux_arm.tar.gz build/linux_arm64.tar.gz build/linux_386.tar.gz build/linux_amd64.tar.gz
+# Linux
+linux: linux_arm linux_arm64 linux_386 linux_amd64
 
-build/linux_386.tar.gz: $(sources)
-	$(call build,linux,386,)
+linux_386: $(sources)
+	$(call build,linux,386)
+	$(call deb,linux,386)
 	$(call tar,linux,386)
 
-build/linux_amd64.tar.gz: $(sources)
-	$(call build,linux,amd64,)
+linux_amd64: $(sources)
+	$(call build,linux,amd64)
+	$(call deb,linux,amd64)
 	$(call tar,linux,amd64)
 
-build/linux_arm.tar.gz: $(sources)
-	$(call build,linux,arm,)
+linux_arm: $(sources)
+	$(call build,linux,arm)
+	$(call deb,linux,arm)
 	$(call tar,linux,arm)
 
-build/linux_arm64.tar.gz: $(sources)
-	$(call build,linux,arm64,)
+linux_arm64: $(sources)
+	$(call build,linux,arm64)
+	$(call deb,linux,arm64)
 	$(call tar,linux,arm64)
 
-##### DARWIN (MAC) BUILDS #####
-darwin: build/darwin_amd64.tar.gz
+# Darwin
+darwin: darwin_amd64
 
-build/darwin_amd64.tar.gz: $(sources)
-	$(call build,darwin,amd64,)
+darwin_amd64: $(sources)
+	$(call build,darwin,amd64)
 	$(call tar,darwin,amd64)
 
-##### WINDOWS BUILDS #####
-windows: build/windows_386.zip build/windows_amd64.zip
+# Windows
+windows: windows_386 windows_amd64
 
-build/windows_386.zip: $(sources)
-	$(call build,windows,386,.exe)
-	$(call zip,windows,386,.exe)
+windows_386: $(sources)
+	$(call build,windows,386)
+	$(call zip,windows,386)
 
-build/windows_amd64.zip: $(sources)
-	$(call build,windows,amd64,.exe)
-	$(call zip,windows,amd64,.exe)
+windows_amd64: $(sources)
+	$(call build,windows,amd64)
+	$(call zip,windows,amd64)
