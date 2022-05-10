@@ -1,6 +1,6 @@
 appname := kmsdecryptenv
-version := 1.0.0
-debversion := $(version)-1
+version := 1.0.1
+debversion := $(version)-2
 
 sources := $(wildcard *.go)
 
@@ -40,11 +40,15 @@ linux_arm64: $(sources)
 	$(call tar,linux,arm64)
 
 # Darwin
-darwin: darwin_amd64
+darwin: darwin_amd64 darwin_arm64
 
 darwin_amd64: $(sources)
 	$(call build,darwin,amd64)
 	$(call tar,darwin,amd64)
+
+darwin_arm64: $(sources)
+	$(call build,darwin,arm64)
+	$(call tar,darwin,arm64)
 
 # Windows
 windows: windows_386 windows_amd64
